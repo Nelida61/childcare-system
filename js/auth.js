@@ -92,7 +92,9 @@ async function determineUserRole() {
 
 // 登入
 async function handleLogin(email, password) {
+  // 清除之前的錯誤訊息
   state.error = '';
+  
   if (!email || !password) {
     state.error = '請輸入帳號和密碼';
     render();
@@ -118,7 +120,12 @@ async function handleLogin(email, password) {
         token: data.access_token
       };
       sessionStorage.setItem('childcare_user', JSON.stringify(state.user));
+      
+      // 判斷角色並自動跳轉
       await determineUserRole();
+      
+      // 登入成功後跳轉到首頁（會自動導向對應頁面）
+      navigateTo('home');
     } else {
       state.error = '帳號或密碼錯誤';
       render();
@@ -127,16 +134,4 @@ async function handleLogin(email, password) {
     state.error = '登入失敗，請稍後再試';
     render();
   }
-}
-
-// 登出
-function handleLogout() {
-  state.user = null;
-  state.userRole = null;
-  state.providerData = null;
-  state.parentData = null;
-  state.adminData = null;
-  state.currentPage = 'home';
-  sessionStorage.removeItem('childcare_user');
-  render();
 }
