@@ -135,3 +135,15 @@ async function handleLogin(email, password) {
     render();
   }
 }
+
+// 登出
+function handleLogout() {
+  state.user = null;
+  state.userRole = null;
+  state.providerData = null;
+  state.parentData = null;
+  state.adminData = null;
+  state.currentPage = 'home';
+  sessionStorage.removeItem('childcare_user');
+  render();
+}
