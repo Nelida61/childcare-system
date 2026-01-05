@@ -5,20 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>托育人員鼓勵機制試辦計畫</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>托育人員鼓勵機制試辦計畫</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 其他 head 內容 -->
+</head>
+<body>
+  <div id="app"></div>
+  
+  <!-- 載入 JS 檔案 -->
+  <script src="js/config.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/provider.js"></script>
+  <script src="js/parent.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <!-- 初始化 -->
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#FDB813',
-            primaryDark: '#E5A511',
-            secondary: '#FEF3C7',
-            accent: '#FBBF24',
-          }
-        }
-      }
-    }
+    init();
   </script>
+</body>
+</html>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
     body {
