@@ -36,17 +36,8 @@ function toggleComment(commentId) {
 // 管理員選擇托育人員
 function selectProviderForAdmin(providerId) {
   state.selectedProviderForAdmin = providerId;
+  fetchProviderDetailForAdmin(providerId);
   navigateTo('admin-provider-detail');
-}
-
-// 初始化應用
-function init() {
-  checkSession();
-  render();
-  // 如果在首頁且未登入，載入最新消息
-  if (!state.user && state.currentPage === 'home') {
-    fetchNews();
-  }
 }
 
 // 獲取最新消息
@@ -104,4 +95,10 @@ async function fetchNews() {
   } catch (error) {
     console.error('獲取消息失敗:', error);
   }
+}
+
+// 初始化應用
+function init() {
+  checkSession();
+  render();
 }
