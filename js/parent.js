@@ -310,3 +310,59 @@ function renderEvaluateDetailPage() {
               <button onclick="saveComment('${provider.id}')" 
                       class="mt-4 w-full py-3 bg-gradient-to-r from-orange-400 to-red-400 text-white font-bold rounded-lg hover:from-orange-500 hover:to-red-500 transition shadow-lg">
                 💌 提交留言給管理員（僅此一次）
+              </button>
+              
+              <p class="text-xs text-gray-500 mt-2 text-center">
+                ⚠️ 請注意：留言提交後將無法修改或刪除
+              </p>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// 渲染評價區塊（唯讀版本）
+function renderEvaluationSectionReadOnly(title, category, items, evaluation) {
+  return `
+    <div class="mb-8">
+      <h3 class="text-lg font-bold text-gray-700 mb-4 pb-2 border-b-2 border-gray-200">${title}</h3>
+      <div class="space-y-3">
+        ${items.map(item => `
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+            <span class="text-2xl">${evaluation[item.key] ? '❤️' : '🤍'}</span>
+            <label class="flex-1 text-gray-600 cursor-not-allowed">
+              ${item.text}
+            </label>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// 渲染評價區塊（可編輯版本）
+function renderEvaluationSection(title, category, items, evaluation) {
+  return `
+    <div class="mb-8 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-6 border-2 border-gray-200">
+      <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+        <span class="text-2xl">📝</span>
+        ${title}
+      </h3>
+      <div class="space-y-3">
+        ${items.map(item => `
+          <div class="bg-white p-4 rounded-lg border border-gray-200 hover:border-yellow-400 transition">
+            <label class="flex items-center gap-4 cursor-pointer">
+              <input type="checkbox" 
+                     name="${item.key}" 
+                     class="heart-checkbox"
+                     ${evaluation[item.key] ? 'checked' : ''}>
+              <span class="text-gray-700 flex-1">${item.text}</span>
+            </label>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
