@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+body {
+  font-family: 'Noto Sans TC', sans-serif;
+}
+
+.heart-checkbox {
+  appearance: none;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  position: relative;
+}
+
+.heart-checkbox::before {
+  content: '🤍';
+  font-size: 28px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.heart-checkbox:checked::before {
+  content: '❤️';
+}
