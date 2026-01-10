@@ -1,4 +1,4 @@
-// 認證相關函數
+// 登入/登出相關函數
 
 // 檢查登入狀態
 function checkUser() {
@@ -26,9 +26,6 @@ async function handleLogin(email, password) {
   }
 
   try {
-    console.log('=== 開始登入流程 ===');
-    
-    // 步驟 1: 進行身份驗證
     const authResponse = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: {
@@ -49,57 +46,7 @@ async function handleLogin(email, password) {
     const userId = authData.user.id;
     const token = authData.access_token;
 
-    // 步驟 2: 判斷使用者身份
-    let userRole = null;
-    
-    // 檢查是否為托育人員
-    const providerCheck = await fetch(`${SUPABASE_URL}/rest/v1/child_care_providers?user_id=eq.${userId}&select=id`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${token}`
-      }
-    });
-    
-    if (providerCheck.ok) {
-      const providerData = await providerCheck.json();
-      if (providerData.length > 0) {
-        userRole = 'provider';
-      }
-    }
-
-    // 檢查是否為家長
-    if (!userRole) {
-      const parentCheck = await fetch(`${SUPABASE_URL}/rest/v1/parents?user_id=eq.${userId}&select=id`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (parentCheck.ok) {
-        const parentData = await parentCheck.json();
-        if (parentData.length > 0) {
-          userRole = 'parent';
-        }
-      }
-    }
-
-    // 檢查是否為管理員
-    if (!userRole) {
-      const adminCheck = await fetch(`${SUPABASE_URL}/rest/v1/admins?user_id=eq.${userId}&select=id`, {
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (adminCheck.ok) {
-        const adminData = await adminCheck.json();
-        if (adminData.length > 0) {
-          userRole = 'admin';
-        }
-      }
-    }
+    let userRole = await determineUserRole(userId, token);
 
     if (!userRole) {
       state.error = '此帳號未註冊為托育人員、家長或管理員';
@@ -107,7 +54,6 @@ async function handleLogin(email, password) {
       return;
     }
 
-    // 步驟 3: 儲存登入狀態
     state.user = { 
       id: userId, 
       email: authData.user.email, 
@@ -117,20 +63,17 @@ async function handleLogin(email, password) {
     state.userRole = userRole;
     sessionStorage.setItem('childcare_user', JSON.stringify(state.user));
     
-    // 步驟 4: 導向對應頁面並獲取資料
     if (userRole === 'provider') {
-      await fetchProviderData();
       state.currentPage = 'profile';
+      await fetchProviderData();
     } else if (userRole === 'parent') {
-      await fetchParentData();
       state.currentPage = 'evaluate';
+      await fetchParentData();
     } else if (userRole === 'admin') {
-      await fetchAdminData();
       state.currentPage = 'admin-dashboard';
+      await fetchAdminData();
     }
     
-    render();
-    console.log('=== 登入流程完成 ===');
   } catch (error) {
     console.error('登入錯誤:', error);
     state.error = '登入失敗，請稍後再試';
@@ -138,24 +81,53 @@ async function handleLogin(email, password) {
   }
 }
 
+// 判斷使用者身份
+async function determineUserRole(userId, token) {
+  // 檢查是否為托育人員
+  const providerCheck = await fetch(`${SUPABASE_URL}/rest/v1/child_care_providers?user_id=eq.${userId}&select=id`, {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (providerCheck.ok) {
+    const providerData = await providerCheck.json();
+    if (providerData.length > 0) return 'provider';
+  }
+
+  // 檢查是否為家長
+  const parentCheck = await fetch(`${SUPABASE_URL}/rest/v1/parents?user_id=eq.${userId}&select=id`, {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (parentCheck.ok) {
+    const parentData = await parentCheck.json();
+    if (parentData.length > 0) return 'parent';
+  }
+
+  // 檢查是否為管理員
+  const adminCheck = await fetch(`${SUPABASE_URL}/rest/v1/admins?user_id=eq.${userId}&select=id`, {
+    headers: {
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  
+  if (adminCheck.ok) {
+    const adminData = await adminCheck.json();
+    if (adminData.length > 0) return 'admin';
+  }
+
+  return null;
+}
+
 // 登出
 function handleLogout() {
-  state.user = null;
-  state.userRole = null;
-  state.providerData = null;
-  state.parentData = null;
-  state.adminData = null;
-  state.adminStats = {
-    totalParents: 0,
-    evaluatedParents: 0
-  };
-  state.assignedProviders = [];
-  state.allProviders = [];
-  state.selectedProviderForAdmin = null;
-  state.providerEvaluationsDetail = [];
-  state.currentEvaluation = null;
-  state.selectedProvider = null;
-  state.currentPage = 'home';
+  resetState();
   sessionStorage.removeItem('childcare_user');
   render();
 }
