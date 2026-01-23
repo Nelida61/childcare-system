@@ -136,6 +136,10 @@ function renderFooter() {
             <span>📠 傳真：${CENTER_INFO.fax}</span>
             <span>📧 電子郵件：<a href="mailto:${CENTER_INFO.email}" class="hover:text-white underline">${CENTER_INFO.email}</a></span>
           </div>
+          <div class="mt-3 flex justify-center items-center gap-4">
+            <a href="${CENTER_INFO.website}" target="_blank" rel="noopener" class="text-xs text-yellow-100 underline decoration-1 hover:text-white">🌐 中心網站</a>
+            <a href="${CENTER_INFO.facebook}" target="_blank" rel="noopener" class="text-xs text-yellow-100 underline decoration-1 hover:text-white">🔵 Facebook</a>
+          </div>
           <p class="text-xs mt-3 text-yellow-100">提供專業、安全、溫馨的托育服務</p>
         </div>
       </div>

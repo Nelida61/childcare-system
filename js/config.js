@@ -53,3 +53,7 @@ const CENTER_INFO = {
   fax: '02-29760375',
   email: 'baby29760376@gmail.com'
 };
+
+// 顯示用外部連結
+CENTER_INFO.website = 'https://29760376.topschool.tw/Custom/02000';
+CENTER_INFO.facebook = 'https://www.facebook.com/people/%E4%B8%89%E9%87%8D%E5%B1%85%E5%AE%B6%E6%89%98%E8%82%B2%E6%9C%8D%E5%8B%99%E4%B8%AD%E5%BF%83/100082846032490/';
