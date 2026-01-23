@@ -181,12 +181,19 @@ async function saveEvaluation(providerId, evaluationData) {
     });
 
     if (response.ok) {
+      const responseData = await response.json();
+      if (responseData && responseData.length > 0) {
+        state.currentEvaluation = responseData[0];
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await fetchEvaluation(providerId);
+      }
       alert('評價已成功提交！\n\n評價內容已鎖定，無法修改。');
-      await fetchEvaluation(providerId);
       render();
     } else {
       const errorText = await response.text();
-      if (errorText.includes('duplicate') || errorText.includes('unique')) {
+      console.error('評價提交失敗:', errorText);
+      if (errorText.includes('duplicate') || errorText.includes('unique') || errorText.includes('Unique')) {
         alert('您已經提交過評價了！');
         await fetchEvaluation(providerId);
         render();
@@ -234,12 +241,19 @@ async function saveComment(providerId) {
     });
     
     if (response.ok) {
+      const responseData = await response.json();
+      if (responseData && responseData.length > 0) {
+        state.currentComment = responseData[0];
+      } else {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await fetchComment(providerId);
+      }
       alert('留言已成功提交給管理員！\n\n留言內容已鎖定，無法修改。');
-      await fetchComment(providerId);
       render();
     } else {
       const errorText = await response.text();
-      if (errorText.includes('duplicate') || errorText.includes('unique')) {
+      console.error('留言提交失敗:', errorText);
+      if (errorText.includes('duplicate') || errorText.includes('unique') || errorText.includes('Unique')) {
         alert('您已經提交過留言了！');
         await fetchComment(providerId);
         render();
