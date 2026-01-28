@@ -1,7 +1,7 @@
 // 全域狀態管理
 const state = {
   user: null,
-  userRole: null, // 'provider' or 'parent' or 'admin'
+  userRole: null,
   providerData: null,
   parentData: null,
   adminData: null,
@@ -18,6 +18,7 @@ const state = {
   selectedProvider: null,
   evaluationStats: null,
   news: [],
+  selectedNewsId: null, // 🔥 新增這一行
   currentPage: 'home',
   error: ''
 };
@@ -43,6 +44,7 @@ function resetState() {
   state.currentComment = null;
   state.selectedProvider = null;
   state.evaluationStats = null;
+  state.selectedNewsId = null; // 🔥 新增這一行
   state.currentPage = 'home';
   state.error = '';
 }
