@@ -119,7 +119,7 @@ function getPageContent() {
       return renderAdminDashboard();
     case 'admin-provider-detail':
       return renderAdminProviderDetail();
-    case 'news-detail': 
+    case 'news-detail':
       return renderNewsDetailPage();
     default:
       return renderHomePage();
